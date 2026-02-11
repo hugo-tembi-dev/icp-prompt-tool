@@ -8,6 +8,18 @@ CREATE TABLE IF NOT EXISTS questions (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- System prompt table (stores the editable system prompt)
+CREATE TABLE IF NOT EXISTS system_prompt (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  content TEXT NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert default system prompt
+INSERT INTO system_prompt (content) VALUES (
+  'You are an ICP (Ideal Customer Profile) analyst. Analyze the provided website/company data thoroughly. Be detailed, specific, and provide actionable insights based on the data provided.'
+);
+
 -- Prompt results table
 CREATE TABLE IF NOT EXISTS prompt_results (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -19,8 +31,10 @@ CREATE TABLE IF NOT EXISTS prompt_results (
 
 -- Enable Row Level Security (optional but recommended)
 ALTER TABLE questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE system_prompt ENABLE ROW LEVEL SECURITY;
 ALTER TABLE prompt_results ENABLE ROW LEVEL SECURITY;
 
 -- Allow all operations for now (adjust based on your auth needs)
 CREATE POLICY "Allow all operations on questions" ON questions FOR ALL USING (true);
+CREATE POLICY "Allow all operations on system_prompt" ON system_prompt FOR ALL USING (true);
 CREATE POLICY "Allow all operations on prompt_results" ON prompt_results FOR ALL USING (true);

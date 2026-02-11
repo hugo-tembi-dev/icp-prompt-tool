@@ -5,13 +5,13 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 })
 
-export async function runPrompt(systemIcp, websiteData) {
-  // Build system prompt with ICP questions as instructions
-  const systemPrompt = `You are an ICP (Ideal Customer Profile) analyst. Analyze the provided website/company data and answer the following questions thoroughly:
+export async function runPrompt(systemPrompt, questions, websiteData) {
+  // Build user message with website data + questions
+  const userMessage = `## Website Data
+${JSON.stringify(websiteData, null, 2)}
 
-${systemIcp.map((q, i) => `${i + 1}. ${q}`).join('\n')}
-
-Provide detailed, actionable insights for each question based on the data provided. Structure your response clearly with each question addressed.`
+## Questions to Answer
+${questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}`
 
   const response = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
@@ -22,7 +22,7 @@ Provide detailed, actionable insights for each question based on the data provid
       },
       {
         role: 'user',
-        content: JSON.stringify(websiteData, null, 2)
+        content: userMessage
       }
     ],
     temperature: 0.7,

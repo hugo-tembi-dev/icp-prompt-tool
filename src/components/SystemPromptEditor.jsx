@@ -1,0 +1,138 @@
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+
+const DEFAULT_PROMPT = 'You are an ICP (Ideal Customer Profile) analyst. Analyze the provided website/company data thoroughly. Be detailed, specific, and provide actionable insights based on the data provided.'
+
+export default function SystemPromptEditor({ onSystemPromptChange }) {
+  const [systemPrompt, setSystemPrompt] = useState(DEFAULT_PROMPT)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editContent, setEditContent] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    fetchSystemPrompt()
+  }, [])
+
+  useEffect(() => {
+    onSystemPromptChange(systemPrompt)
+  }, [systemPrompt, onSystemPromptChange])
+
+  async function fetchSystemPrompt() {
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('system_prompt')
+      .select('*')
+      .limit(1)
+      .single()
+
+    if (error) {
+      console.error('Error fetching system prompt:', error)
+      setSystemPrompt(DEFAULT_PROMPT)
+    } else if (data) {
+      setSystemPrompt(data.content)
+    }
+    setLoading(false)
+  }
+
+  async function saveSystemPrompt() {
+    setSaving(true)
+
+    const { data: existing } = await supabase
+      .from('system_prompt')
+      .select('id')
+      .limit(1)
+      .single()
+
+    let error
+    if (existing) {
+      const result = await supabase
+        .from('system_prompt')
+        .update({ content: editContent, updated_at: new Date().toISOString() })
+        .eq('id', existing.id)
+      error = result.error
+    } else {
+      const result = await supabase
+        .from('system_prompt')
+        .insert([{ content: editContent }])
+      error = result.error
+    }
+
+    if (error) {
+      console.error('Error saving system prompt:', error)
+    } else {
+      setSystemPrompt(editContent)
+      setIsEditing(false)
+    }
+    setSaving(false)
+  }
+
+  function startEditing() {
+    setEditContent(systemPrompt)
+    setIsEditing(true)
+  }
+
+  function cancelEditing() {
+    setIsEditing(false)
+    setEditContent('')
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow p-4">
+        <h2 className="text-lg font-semibold mb-4">System Prompt</h2>
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">System Prompt</h2>
+        {!isEditing && (
+          <button
+            onClick={startEditing}
+            className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800"
+          >
+            Edit
+          </button>
+        )}
+      </div>
+
+      {isEditing ? (
+        <div>
+          <textarea
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            className="w-full h-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            placeholder="Enter system prompt instructions..."
+          />
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={saveSystemPrompt}
+              disabled={saving}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+            >
+              {saving ? 'Saving...' : 'Save'}
+            </button>
+            <button
+              onClick={cancelEditing}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="p-3 bg-gray-50 rounded-md">
+          <p className="text-sm text-gray-700 whitespace-pre-wrap">{systemPrompt}</p>
+        </div>
+      )}
+
+      <p className="mt-3 text-xs text-gray-500">
+        This prompt is sent as the system instruction to OpenAI.
+      </p>
+    </div>
+  )
+}

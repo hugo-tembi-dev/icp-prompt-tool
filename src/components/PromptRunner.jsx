@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { runPrompt } from '../lib/openai'
 
-export default function PromptRunner({ questions, selectedIds, jsonData, onComplete }) {
+export default function PromptRunner({ systemPrompt, questions, selectedIds, jsonData, onComplete }) {
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState({ current: 0, total: 0, currentDomain: '' })
   const [error, setError] = useState('')
@@ -54,7 +54,7 @@ export default function PromptRunner({ questions, selectedIds, jsonData, onCompl
           system_icp: selectedQuestions
         }
 
-        const response = await runPrompt(selectedQuestions, { domainURL: domain, entries: domainData })
+        const response = await runPrompt(systemPrompt, selectedQuestions, { domainURL: domain, entries: domainData })
 
         const { data, error: dbError } = await supabase
           .from('prompt_results')
