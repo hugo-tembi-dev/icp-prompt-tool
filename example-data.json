@@ -1,0 +1,32 @@
+[
+  {
+    "domainURL": "stripe.com",
+    "company": "Stripe",
+    "industry": "Fintech",
+    "description": "Online payment processing for internet businesses",
+    "employees": "5000+",
+    "founded": 2010
+  },
+  {
+    "domainURL": "stripe.com",
+    "company": "Stripe",
+    "product": "Stripe Atlas",
+    "description": "Company incorporation service for startups"
+  },
+  {
+    "domainURL": "notion.so",
+    "company": "Notion",
+    "industry": "Productivity",
+    "description": "All-in-one workspace for notes, docs, and collaboration",
+    "employees": "500+",
+    "founded": 2016
+  },
+  {
+    "domainURL": "figma.com",
+    "company": "Figma",
+    "industry": "Design",
+    "description": "Collaborative interface design tool",
+    "employees": "1000+",
+    "founded": 2012
+  }
+]
