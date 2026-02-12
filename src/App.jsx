@@ -11,6 +11,7 @@ function App() {
   const [questions, setQuestions] = useState([])
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([])
   const [jsonData, setJsonData] = useState(null)
+  const [userContext, setUserContext] = useState(null)
   const [resultsRefresh, setResultsRefresh] = useState(0)
 
   const handleSystemPromptChange = useCallback((prompt) => {
@@ -53,12 +54,18 @@ function App() {
           </div>
 
           <div className="space-y-6">
-            <JsonImporter jsonData={jsonData} onJsonChange={setJsonData} />
+            <JsonImporter
+              jsonData={jsonData}
+              userContext={userContext}
+              onJsonChange={setJsonData}
+              onUserContextChange={setUserContext}
+            />
             <PromptRunner
               systemPrompt={systemPrompt}
               questions={questions}
               selectedIds={selectedQuestionIds}
               jsonData={jsonData}
+              userContext={userContext}
               onComplete={handlePromptComplete}
             />
           </div>

@@ -1,16 +1,21 @@
 import { useState, useRef } from 'react'
 
-export default function JsonImporter({ jsonData, onJsonChange }) {
+export default function JsonImporter({ jsonData, userContext, onJsonChange, onUserContextChange }) {
   const [error, setError] = useState('')
   const fileInputRef = useRef(null)
 
   function normalizeJson(parsed) {
+    let extractedUserContext = null
+
     // Case 1: Already an array of objects
     if (Array.isArray(parsed)) {
-      return parsed.map(item => ({
-        ...item,
-        domainURL: item.domainURL || item.domainUrl || item.domain
-      }))
+      return {
+        data: parsed.map(item => ({
+          ...item,
+          domainURL: item.domainURL || item.domainUrl || item.domain
+        })),
+        userContext: null
+      }
     }
 
     // Case 2: Object with "content" field (stringified JSON)
@@ -27,6 +32,11 @@ export default function JsonImporter({ jsonData, onJsonChange }) {
     if (parsed.data?.WEBSHOP) {
       const webshop = parsed.data.WEBSHOP
       const result = []
+
+      // Extract user_context if present
+      if (parsed.user_context) {
+        extractedUserContext = parsed.user_context
+      }
 
       // Extract main webshop overview
       if (webshop.overview) {
@@ -49,15 +59,18 @@ export default function JsonImporter({ jsonData, onJsonChange }) {
         })
       }
 
-      return result
+      return { data: result, userContext: extractedUserContext }
     }
 
     // Case 4: Single object with domain info - wrap in array
     if (parsed.domainURL || parsed.domainUrl || parsed.domain) {
-      return [{
-        ...parsed,
-        domainURL: parsed.domainURL || parsed.domainUrl || parsed.domain
-      }]
+      return {
+        data: [{
+          ...parsed,
+          domainURL: parsed.domainURL || parsed.domainUrl || parsed.domain
+        }],
+        userContext: parsed.user_context || null
+      }
     }
 
     return null
@@ -74,19 +87,20 @@ export default function JsonImporter({ jsonData, onJsonChange }) {
         const parsed = JSON.parse(content)
         const normalized = normalizeJson(parsed)
 
-        if (!normalized || normalized.length === 0) {
+        if (!normalized || !normalized.data || normalized.data.length === 0) {
           setError('Could not extract domain data from JSON. Expected array of objects or Tembi WEBSHOP format.')
           return
         }
 
-        const hasdomainURL = normalized.some(item => item.domainURL)
+        const hasdomainURL = normalized.data.some(item => item.domainURL)
         if (!hasdomainURL) {
           setError('Warning: No domainURL fields found in data')
         } else {
           setError('')
         }
 
-        onJsonChange(normalized)
+        onJsonChange(normalized.data)
+        onUserContextChange(normalized.userContext)
       } catch (err) {
         setError('Invalid JSON: ' + err.message)
       }
@@ -98,6 +112,7 @@ export default function JsonImporter({ jsonData, onJsonChange }) {
     const text = e.target.value
     if (!text.trim()) {
       onJsonChange(null)
+      onUserContextChange(null)
       setError('')
       return
     }
@@ -106,12 +121,13 @@ export default function JsonImporter({ jsonData, onJsonChange }) {
       const parsed = JSON.parse(text)
       const normalized = normalizeJson(parsed)
 
-      if (!normalized || normalized.length === 0) {
+      if (!normalized || !normalized.data || normalized.data.length === 0) {
         setError('Could not extract domain data from JSON')
         return
       }
       setError('')
-      onJsonChange(normalized)
+      onJsonChange(normalized.data)
+      onUserContextChange(normalized.userContext)
     } catch (err) {
       setError('Invalid JSON: ' + err.message)
     }
@@ -175,6 +191,18 @@ export default function JsonImporter({ jsonData, onJsonChange }) {
               {domains.length > 5 && <li>...and {domains.length - 5} more</li>}
             </ul>
           )}
+        </div>
+      )}
+
+      {userContext && (
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+          <p className="text-blue-700 text-sm font-medium mb-2">User Context Detected:</p>
+          <ul className="text-sm text-blue-600 space-y-1">
+            {userContext.userName && <li>User: {userContext.userName}</li>}
+            {userContext.country_code && <li>Country: {userContext.country_code}</li>}
+            {userContext.providers && <li>Providers: {userContext.providers}</li>}
+            {userContext.currency && <li>Currency: {userContext.currency}</li>}
+          </ul>
         </div>
       )}
     </div>

@@ -6,9 +6,16 @@ const openai = new OpenAI({
 })
 
 export async function runPrompt(systemPrompt, questions, websiteData) {
-  // Build user message with website data + questions
-  const userMessage = `## Website Data
-${JSON.stringify(websiteData, null, 2)}
+  // Build user message with user context + website data + questions
+  const userContextSection = websiteData.userContext
+    ? `## User Context
+${JSON.stringify(websiteData.userContext, null, 2)}
+
+`
+    : ''
+
+  const userMessage = `${userContextSection}## Website Data
+${JSON.stringify({ domainURL: websiteData.domainURL, entries: websiteData.entries }, null, 2)}
 
 ## Questions to Answer
 ${questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}`
