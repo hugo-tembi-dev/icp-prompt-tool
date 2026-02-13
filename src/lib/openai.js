@@ -20,28 +20,20 @@ ${JSON.stringify({ domainURL: websiteData.domainURL, entries: websiteData.entrie
 ## Questions to Answer
 ${questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}`
 
-  const messages = [
-    {
-      role: 'system',
-      content: systemPrompt
-    },
-    {
-      role: 'user',
-      content: userMessage
-    }
-  ]
-
   // Debug: Log what we're sending to OpenAI
-  console.log('=== OPENAI REQUEST ===')
-  console.log('Messages structure:', JSON.stringify(messages, null, 2))
-  console.log('======================')
+  console.log('=== OPENAI RESPONSES API REQUEST ===')
+  console.log('Model:', model)
+  console.log('Instructions:', systemPrompt)
+  console.log('Input:', userMessage)
+  console.log('=====================================')
 
-  const response = await openai.chat.completions.create({
+  const response = await openai.responses.create({
     model,
-    messages,
+    instructions: systemPrompt,
+    input: userMessage,
     temperature: 0.7,
-    max_tokens: 2000
+    max_output_tokens: 2000
   })
 
-  return response.choices[0].message.content
+  return response.output_text
 }

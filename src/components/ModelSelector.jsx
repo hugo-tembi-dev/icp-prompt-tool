@@ -1,12 +1,27 @@
 import { useState } from 'react'
 
 const AVAILABLE_MODELS = [
+  // GPT-5 Series (Flagship)
+  { id: 'gpt-5.2', name: 'GPT-5.2', description: 'Flagship reasoning model - most powerful' },
+  { id: 'gpt-5.1', name: 'GPT-5.1', description: 'Advanced flagship model' },
+  { id: 'gpt-5', name: 'GPT-5', description: 'Recommended for complex tasks' },
+
+  // GPT-4.1 Series (Latest efficient models)
+  { id: 'gpt-4.1', name: 'GPT-4.1', description: 'Improved coding & 1M context window' },
+  { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', description: 'Fast, efficient, fine-tunable' },
+  { id: 'gpt-4.1-nano', name: 'GPT-4.1 Nano', description: 'Smallest and fastest' },
+
+  // GPT-4o Series
+  { id: 'gpt-4o', name: 'GPT-4o', description: 'Multimodal, vision capable' },
   { id: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Fast and cost-effective' },
-  { id: 'gpt-4o', name: 'GPT-4o', description: 'Most capable model' },
-  { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', description: 'High performance' },
-  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Fast and affordable' },
-  { id: 'o1-mini', name: 'o1-mini', description: 'Reasoning model (mini)' },
-  { id: 'o1', name: 'o1', description: 'Advanced reasoning model' },
+
+  // Reasoning Models (o-series)
+  { id: 'o3-pro', name: 'o3-pro', description: 'Most capable reasoning model' },
+  { id: 'o3', name: 'o3', description: 'Advanced reasoning with tools' },
+  { id: 'o4-mini', name: 'o4-mini', description: 'Fast reasoning, best math/coding' },
+  { id: 'o3-mini', name: 'o3-mini', description: 'Efficient reasoning model' },
+  { id: 'o1', name: 'o1', description: 'Original reasoning model' },
+  { id: 'o1-mini', name: 'o1-mini', description: 'Compact reasoning model' },
 ]
 
 export default function ModelSelector({ selectedModel, onModelChange }) {
