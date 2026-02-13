@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import SystemPromptEditor from './components/SystemPromptEditor'
+import ModelSelector from './components/ModelSelector'
 import QuestionManager from './components/QuestionManager'
 import QuestionSelector from './components/QuestionSelector'
 import JsonImporter from './components/JsonImporter'
@@ -8,6 +9,7 @@ import ResultsViewer from './components/ResultsViewer'
 
 function App() {
   const [systemPrompt, setSystemPrompt] = useState('')
+  const [selectedModel, setSelectedModel] = useState('gpt-4o-mini')
   const [questions, setQuestions] = useState([])
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([])
   const [jsonData, setJsonData] = useState(null)
@@ -39,8 +41,9 @@ function App() {
           </p>
         </header>
 
-        <div className="mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <SystemPromptEditor onSystemPromptChange={handleSystemPromptChange} />
+          <ModelSelector selectedModel={selectedModel} onModelChange={setSelectedModel} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -62,6 +65,7 @@ function App() {
             />
             <PromptRunner
               systemPrompt={systemPrompt}
+              model={selectedModel}
               questions={questions}
               selectedIds={selectedQuestionIds}
               jsonData={jsonData}

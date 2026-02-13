@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { runPrompt } from '../lib/openai'
 
-export default function PromptRunner({ systemPrompt, questions, selectedIds, jsonData, userContext, onComplete }) {
+export default function PromptRunner({ systemPrompt, model, questions, selectedIds, jsonData, userContext, onComplete }) {
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState({ current: 0, total: 0, currentDomain: '' })
   const [error, setError] = useState('')
@@ -52,10 +52,11 @@ export default function PromptRunner({ systemPrompt, questions, selectedIds, jso
           domainURL: domain,
           data: domainData,
           system_icp: selectedQuestions,
-          user_context: userContext
+          user_context: userContext,
+          model: model
         }
 
-        const response = await runPrompt(systemPrompt, selectedQuestions, { domainURL: domain, entries: domainData, userContext })
+        const response = await runPrompt(systemPrompt, selectedQuestions, { domainURL: domain, entries: domainData, userContext }, model)
 
         const { data, error: dbError } = await supabase
           .from('prompt_results')
@@ -91,6 +92,7 @@ export default function PromptRunner({ systemPrompt, questions, selectedIds, jso
       <h2 className="text-lg font-semibold mb-4">Run Prompts</h2>
 
       <div className="mb-4 space-y-2 text-sm text-gray-600">
+        <p>Model: <span className="font-medium text-gray-800">{model}</span></p>
         <p>Selected questions: <span className="font-medium text-gray-800">{selectedCount}</span></p>
         <p>Domains to process: <span className="font-medium text-gray-800">{domainCount}</span></p>
       </div>

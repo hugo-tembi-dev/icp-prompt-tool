@@ -5,7 +5,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 })
 
-export async function runPrompt(systemPrompt, questions, websiteData) {
+export async function runPrompt(systemPrompt, questions, websiteData, model = 'gpt-4o-mini') {
   // Build user message with user context + website data + questions
   const userContextSection = websiteData.userContext
     ? `## User Context
@@ -37,7 +37,7 @@ ${questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}`
   console.log('======================')
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    model,
     messages,
     temperature: 0.7,
     max_tokens: 2000
