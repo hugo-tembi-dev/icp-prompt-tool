@@ -79,21 +79,21 @@ export default function SystemPromptEditor({ onSystemPromptChange }) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold mb-4">System Prompt</h2>
-        <p className="text-gray-500">Loading...</p>
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
+        <h2 className="text-lg font-semibold text-slate-700 mb-4">System Prompt</h2>
+        <p className="text-slate-400">Loading...</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">System Prompt</h2>
+        <h2 className="text-lg font-semibold text-slate-700">System Prompt</h2>
         {!isEditing && (
           <button
             onClick={startEditing}
-            className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800"
+            className="px-3 py-1 text-sm text-sky-500 hover:text-sky-600 transition-colors"
           >
             Edit
           </button>
@@ -105,32 +105,41 @@ export default function SystemPromptEditor({ onSystemPromptChange }) {
           <textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
-            className="w-full h-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            className="w-full h-40 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300 font-mono text-sm text-slate-600 bg-white/50"
             placeholder="Enter system prompt instructions..."
           />
           <div className="flex gap-2 mt-3">
             <button
               onClick={saveSystemPrompt}
               disabled={saving}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+              className="px-4 py-2 bg-emerald-400 text-white rounded-lg hover:bg-emerald-500 transition-colors disabled:bg-slate-300"
             >
               {saving ? 'Saving...' : 'Save'}
             </button>
             <button
               onClick={cancelEditing}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+              className="px-4 py-2 bg-slate-200 text-slate-600 rounded-lg hover:bg-slate-300 transition-colors"
             >
               Cancel
             </button>
           </div>
         </div>
       ) : (
-        <div className="p-3 bg-gray-50 rounded-md">
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">{systemPrompt}</p>
+        <div className="p-3 bg-slate-50 rounded-lg">
+          <p className="text-sm text-slate-600 whitespace-pre-wrap">
+            {systemPrompt.length > 1000
+              ? `${systemPrompt.slice(0, 1000)}...`
+              : systemPrompt}
+          </p>
+          {systemPrompt.length > 1000 && (
+            <p className="text-xs text-slate-400 mt-2">
+              {systemPrompt.length} characters total — click Edit to see full prompt
+            </p>
+          )}
         </div>
       )}
 
-      <p className="mt-3 text-xs text-gray-500">
+      <p className="mt-3 text-xs text-slate-400">
         This prompt is sent as the system instruction to OpenAI.
       </p>
     </div>

@@ -30,21 +30,21 @@ export default function ModelSelector({ selectedModel, onModelChange }) {
   const currentModel = AVAILABLE_MODELS.find(m => m.id === selectedModel) || AVAILABLE_MODELS[0]
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-3">Model Selection</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
+      <h2 className="text-lg font-semibold text-slate-700 mb-3">Model Selection</h2>
 
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-2 text-left bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 text-left bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-200 transition-colors"
         >
           <div className="flex justify-between items-center">
             <div>
-              <span className="font-medium">{currentModel.name}</span>
-              <span className="text-gray-500 text-sm ml-2">({currentModel.id})</span>
+              <span className="font-medium text-slate-700">{currentModel.name}</span>
+              <span className="text-slate-400 text-sm ml-2">({currentModel.id})</span>
             </div>
             <svg
-              className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -52,11 +52,11 @@ export default function ModelSelector({ selectedModel, onModelChange }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </div>
-          <p className="text-sm text-gray-500 mt-1">{currentModel.description}</p>
+          <p className="text-sm text-slate-400 mt-1">{currentModel.description}</p>
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+          <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-80 overflow-y-auto">
             {AVAILABLE_MODELS.map((model) => (
               <button
                 key={model.id}
@@ -64,19 +64,19 @@ export default function ModelSelector({ selectedModel, onModelChange }) {
                   onModelChange(model.id)
                   setIsOpen(false)
                 }}
-                className={`w-full px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-md last:rounded-b-md ${
-                  model.id === selectedModel ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                className={`w-full px-4 py-3 text-left hover:bg-slate-50 first:rounded-t-lg last:rounded-b-lg transition-colors ${
+                  model.id === selectedModel ? 'bg-sky-50 border-l-4 border-sky-400' : ''
                 }`}
               >
-                <div className="font-medium">{model.name}</div>
-                <div className="text-sm text-gray-500">{model.description}</div>
+                <div className="font-medium text-slate-700">{model.name}</div>
+                <div className="text-sm text-slate-400">{model.description}</div>
               </button>
             ))}
           </div>
         )}
       </div>
 
-      <p className="mt-3 text-xs text-gray-400">
+      <p className="mt-3 text-xs text-slate-400">
         Model used for AI analysis. Different models have different capabilities and costs.
       </p>
     </div>

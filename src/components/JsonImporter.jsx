@@ -141,8 +141,8 @@ export default function JsonImporter({ jsonData, userContext, onJsonChange, onUs
   const domains = getUniqueDomains()
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-4">Import JSON Data</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
+      <h2 className="text-lg font-semibold text-slate-700 mb-4">Import JSON Data</h2>
 
       <div className="mb-4">
         <input
@@ -154,37 +154,37 @@ export default function JsonImporter({ jsonData, userContext, onJsonChange, onUs
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors"
+          className="px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg hover:bg-slate-200 transition-colors text-slate-600"
         >
           Upload JSON/TXT File
         </button>
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-slate-600 mb-2">
           Or paste/edit JSON directly:
         </label>
         <textarea
           value={jsonData ? JSON.stringify(jsonData, null, 2) : ''}
           onChange={handleTextChange}
           placeholder='[{"domainURL": "example.com", "company": "Example Inc", ...}]'
-          className="w-full h-64 px-3 py-2 font-mono text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full h-64 px-3 py-2 font-mono text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300 text-slate-600 bg-white/50"
         />
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+        <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-600 text-sm">
           {error}
         </div>
       )}
 
       {jsonData && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded">
-          <p className="text-green-700 text-sm font-medium">
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+          <p className="text-emerald-600 text-sm font-medium">
             Loaded {jsonData.length} entries with {domains.length} unique domains
           </p>
           {domains.length > 0 && (
-            <ul className="mt-2 text-sm text-green-600">
+            <ul className="mt-2 text-sm text-emerald-500">
               {domains.slice(0, 5).map((domain, i) => (
                 <li key={i}>- {domain}</li>
               ))}
@@ -195,9 +195,9 @@ export default function JsonImporter({ jsonData, userContext, onJsonChange, onUs
       )}
 
       {userContext && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-          <p className="text-blue-700 text-sm font-medium mb-2">User Context Detected:</p>
-          <ul className="text-sm text-blue-600 space-y-1">
+        <div className="mt-4 p-3 bg-sky-50 border border-sky-200 rounded-lg">
+          <p className="text-sky-600 text-sm font-medium mb-2">User Context Detected:</p>
+          <ul className="text-sm text-sky-500 space-y-1">
             {userContext.userName && <li>User: {userContext.userName}</li>}
             {userContext.country_code && <li>Country: {userContext.country_code}</li>}
             {userContext.providers && <li>Providers: {userContext.providers}</li>}

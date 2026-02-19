@@ -46,31 +46,31 @@ export default function ResultsViewer({ refreshTrigger }) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold mb-4">Results</h2>
-        <p className="text-gray-500">Loading results...</p>
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
+        <h2 className="text-lg font-semibold text-slate-700 mb-4">Results</h2>
+        <p className="text-slate-400">Loading results...</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-4">Results ({results.length})</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
+      <h2 className="text-lg font-semibold text-slate-700 mb-4">Results ({results.length})</h2>
 
       {results.length === 0 ? (
-        <p className="text-gray-500 text-center py-4">
+        <p className="text-slate-400 text-center py-4">
           No results yet. Run prompts to see results here.
         </p>
       ) : (
         <>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-600 mb-2">
               Select Domain:
             </label>
             <select
               value={selectedDomain}
               onChange={(e) => setSelectedDomain(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-300 text-slate-600 bg-white/50"
             >
               <option value="">-- Select a domain --</option>
               {uniqueDomains.map((domain) => (
@@ -85,29 +85,29 @@ export default function ResultsViewer({ refreshTrigger }) {
             <div className="space-y-4">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-medium text-gray-800">{selectedResult.domain_url}</h3>
-                  <p className="text-xs text-gray-500">
+                  <h3 className="font-medium text-slate-700">{selectedResult.domain_url}</h3>
+                  <p className="text-xs text-slate-400">
                     {new Date(selectedResult.created_at).toLocaleString()}
                   </p>
                 </div>
                 <button
                   onClick={() => deleteResult(selectedResult.id)}
-                  className="px-2 py-1 text-sm text-red-600 hover:text-red-800"
+                  className="px-2 py-1 text-sm text-rose-400 hover:text-rose-500 transition-colors"
                 >
                   Delete
                 </button>
               </div>
 
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Prompt Input:</h4>
-                <pre className="p-3 bg-gray-50 rounded text-xs overflow-x-auto max-h-40">
+                <h4 className="text-sm font-medium text-slate-600 mb-2">Prompt Input:</h4>
+                <pre className="p-3 bg-slate-50 rounded-lg text-xs overflow-x-auto max-h-40 text-slate-600">
                   {JSON.stringify(selectedResult.prompt_input, null, 2)}
                 </pre>
               </div>
 
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">AI Response:</h4>
-                <div className="p-3 bg-blue-50 rounded text-sm whitespace-pre-wrap max-h-96 overflow-y-auto">
+                <h4 className="text-sm font-medium text-slate-600 mb-2">AI Response:</h4>
+                <div className="p-3 bg-sky-50 rounded-lg text-sm whitespace-pre-wrap max-h-96 overflow-y-auto text-slate-600">
                   {selectedResult.response}
                 </div>
               </div>

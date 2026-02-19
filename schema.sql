@@ -5,8 +5,18 @@
 CREATE TABLE IF NOT EXISTS questions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   content TEXT NOT NULL,
+  tag TEXT DEFAULT 'untagged',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- ============================================================
+-- MIGRATION: Run this ONLY if the table already exists
+-- ============================================================
+-- Step 1: Add the tag column to existing table
+-- ALTER TABLE questions ADD COLUMN IF NOT EXISTS tag TEXT DEFAULT 'untagged';
+
+-- Step 2: Update all existing questions to have 'old-question' tag
+-- UPDATE questions SET tag = 'old-question' WHERE tag IS NULL OR tag = 'untagged';
 
 -- System prompt table (stores the editable system prompt)
 CREATE TABLE IF NOT EXISTS system_prompt (

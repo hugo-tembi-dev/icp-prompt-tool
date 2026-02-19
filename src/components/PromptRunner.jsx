@@ -88,30 +88,30 @@ export default function PromptRunner({ systemPrompt, model, questions, selectedI
   const canRun = selectedCount > 0 && domainCount > 0 && !running
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-4">Run Prompts</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200 p-4">
+      <h2 className="text-lg font-semibold text-slate-700 mb-4">Run Prompts</h2>
 
-      <div className="mb-4 space-y-2 text-sm text-gray-600">
-        <p>Model: <span className="font-medium text-gray-800">{model}</span></p>
-        <p>Selected questions: <span className="font-medium text-gray-800">{selectedCount}</span></p>
-        <p>Domains to process: <span className="font-medium text-gray-800">{domainCount}</span></p>
+      <div className="mb-4 space-y-2 text-sm text-slate-500">
+        <p>Model: <span className="font-medium text-slate-700">{model}</span></p>
+        <p>Selected questions: <span className="font-medium text-slate-700">{selectedCount}</span></p>
+        <p>Domains to process: <span className="font-medium text-slate-700">{domainCount}</span></p>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+        <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-600 text-sm">
           {error}
         </div>
       )}
 
       {running && (
         <div className="mb-4">
-          <div className="flex justify-between text-sm text-gray-600 mb-1">
+          <div className="flex justify-between text-sm text-slate-500 mb-1">
             <span>Processing: {progress.currentDomain}</span>
             <span>{progress.current} / {progress.total}</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-slate-200 rounded-full h-2">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              className="bg-sky-400 h-2 rounded-full transition-all duration-300"
               style={{ width: `${(progress.current / progress.total) * 100}%` }}
             />
           </div>
@@ -121,17 +121,17 @@ export default function PromptRunner({ systemPrompt, model, questions, selectedI
       <button
         onClick={runAllPrompts}
         disabled={!canRun}
-        className={`w-full px-4 py-3 rounded-md font-medium transition-colors ${
+        className={`w-full px-4 py-3 rounded-lg font-medium transition-colors ${
           canRun
-            ? 'bg-green-600 text-white hover:bg-green-700'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            ? 'bg-emerald-400 text-white hover:bg-emerald-500'
+            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
         }`}
       >
         {running ? 'Processing...' : `Run Prompts for ${domainCount} Domains`}
       </button>
 
       {!jsonData && (
-        <p className="mt-2 text-sm text-gray-500 text-center">
+        <p className="mt-2 text-sm text-slate-400 text-center">
           Import JSON data first
         </p>
       )}
