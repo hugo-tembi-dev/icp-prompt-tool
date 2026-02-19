@@ -18,17 +18,28 @@ CREATE TABLE IF NOT EXISTS questions (
 -- Step 2: Update all existing questions to have 'old-question' tag
 -- UPDATE questions SET tag = 'old-question' WHERE tag IS NULL OR tag = 'untagged';
 
--- System prompt table (stores the editable system prompt)
+-- System prompt table (supports multiple named prompts)
 CREATE TABLE IF NOT EXISTS system_prompt (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL DEFAULT 'Default',
   content TEXT NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Insert default system prompt
-INSERT INTO system_prompt (content) VALUES (
+INSERT INTO system_prompt (name, content) VALUES (
+  'Default',
   'You are an ICP (Ideal Customer Profile) analyst. Analyze the provided website/company data thoroughly. Be detailed, specific, and provide actionable insights based on the data provided.'
 );
+
+-- ============================================================
+-- MIGRATION: Run this ONLY if system_prompt table already exists
+-- ============================================================
+-- Step 1: Add the name column to existing table
+-- ALTER TABLE system_prompt ADD COLUMN IF NOT EXISTS name TEXT DEFAULT 'Default';
+
+-- Step 2: Backfill existing rows with a default name
+-- UPDATE system_prompt SET name = 'Default' WHERE name IS NULL;
 
 -- Prompt results table
 CREATE TABLE IF NOT EXISTS prompt_results (
